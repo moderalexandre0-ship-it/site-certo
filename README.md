@@ -23,23 +23,34 @@ NexosPay é um sistema de vendas automatizadas para Discord com painel web, back
 Se estiver usando Railway, prefira configurar `DATABASE_URL` no `.env`:
 
 ```env
-DATABASE_URL=mysql://root:yourRailwayPassword@yourHost:yourPort/PayNexusLTD?ssl=true
+DATABASE_URL=mysql://root:kLwORRWldJGgVyJtxfykQAfjIhBGUJNh@mysql.railway.internal:3306/railway?ssl=true
 ```
 
-Se precisar, também pode usar as variáveis separadas:
+O backend também aceita as variáveis Railway específicas:
 
 ```env
-DATABASE_HOST=yourHost
-DATABASE_PORT=yourPort
-DATABASE_NAME=PayNexusLTD
+MYSQLHOST=mysql.railway.internal
+MYSQLPORT=3306
+MYSQLDATABASE=railway
+MYSQLUSER=root
+MYSQLPASSWORD=kLwORRWldJGgVyJtxfykQAfjIhBGUJNh
+MYSQL_ROOT_PASSWORD=kLwORRWldJGgVyJtxfykQAfjIhBGUJNh
+```
+
+Se quiser, mantenha as variáveis padrão também:
+
+```env
+DATABASE_HOST=mysql.railway.internal
+DATABASE_PORT=3306
+DATABASE_NAME=railway
 DATABASE_USER=root
-DATABASE_PASSWORD=yourRailwayPassword
+DATABASE_PASSWORD=kLwORRWldJGgVyJtxfykQAfjIhBGUJNh
 ```
 
 ### Notas importantes
 
-- O app suporta `DATABASE_URL` ou `MYSQL_URL`.
-- O projeto tentará criar o banco se ele não existir.
+- O app suporta `DATABASE_URL`, `MYSQL_URL` ou as variáveis Railway `MYSQL*`.
+- Não deixe `DATABASE_HOST=localhost` em produção.
 - As tabelas são criadas automaticamente com `sequelize.sync()`.
 
 ## Comandos do bot
