@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexosPay - Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>NexosPay</h1>
+        <p class="subtitle">Painel de Vendas</p>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard">
+          <span class="icon">📊</span>
+          <span class="label">Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="servers">
+          <span class="icon">🖥️</span>
+          <span class="label">Servidores</span>
+        </button>
+        <button class="nav-item" data-page="products">
+          <span class="icon">📦</span>
+          <span class="label">Produtos</span>
+        </button>
+        <button class="nav-item" data-page="orders">
+          <span class="icon">🛒</span>
+          <span class="label">Pedidos</span>
+        </button>
+        <button class="nav-item" data-page="settings">
+          <span class="icon">⚙️</span>
+          <span class="label">Configurações</span>
+        </button>
+        <button class="nav-item" data-page="logs">
+          <span class="icon">📜</span>
+          <span class="label">Logs</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card" id="userCard" style="display: none;">
+          <img id="sidebarAvatar" class="avatar-small" alt="Avatar">
+          <div class="user-info">
+            <p id="sidebarUsername">Usuário</p>
+            <small id="sidebarDiscriminator">#0000</small>
+          </div>
+        </div>
+        <button id="logoutBtn" class="logout-btn">Sair</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h2 id="pageTitle">Dashboard</h2>
+        </div>
+        <div class="topbar-right">
+          <button id="loginBtn" class="btn-primary">Entrar com Discord</button>
+          <a id="inviteBotBtn" class="btn-secondary" href="#" target="_blank">Convidar Bot</a>
+        </div>
+      </header>
+
+      <!-- Pages -->
+      <div class="pages">
+        <!-- Dashboard -->
+        <section class="page active" id="dashboard-page">
+          <div class="grid-2">
+            <div class="card">
+              <h3>📊 Visão Geral</h3>
+              <div class="stats">
+                <div class="stat-item">
+                  <span class="stat-label">Produtos</span>
+                  <span class="stat-value" id="totalProducts">0</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Pedidos</span>
+                  <span class="stat-value" id="totalOrders">0</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Servidores</span>
+                  <span class="stat-value" id="totalServers">0</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>🚀 Início Rápido</h3>
+              <p>Bem-vindo ao NexosPay! Faça login com Discord para começar a gerenciar suas vendas.</p>
+              <button id="quickStartBtn" class="btn-primary" style="margin-top: 1rem;">Começar Agora</button>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top: 2rem;">
+            <h3>📝 Últimos Produtos</h3>
+            <div id="recentProducts" class="list-container">
+              <p class="empty-state">Nenhum produto criado</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Servers -->
+        <section class="page" id="servers-page">
+          <div class="card">
+            <div class="card-header">
+              <h3>Meus Servidores</h3>
+              <p class="subtitle">Gerencie seus servidores Discord</p>
+            </div>
+            <div id="serversList" class="servers-grid">
+              <p class="empty-state">Faça login para ver seus servidores</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Products -->
+        <section class="page" id="products-page">
+          <div class="card">
+            <div class="card-header">
+              <h3>Gerenciar Produtos</h3>
+              <button id="createProductBtn" class="btn-primary">+ Novo Produto</button>
+            </div>
+            <div id="productsList" class="products-grid">
+              <p class="empty-state">Nenhum produto criado</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Orders -->
+        <section class="page" id="orders-page">
+          <div class="card">
+            <div class="card-header">
+              <h3>Meus Pedidos</h3>
+            </div>
+            <div id="ordersList" class="list-container">
+              <p class="empty-state">Nenhum pedido</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings -->
+        <section class="page" id="settings-page">
+          <div class="grid-2">
+            <div class="card">
+              <h3>🎨 Personalização do Bot</h3>
+              <form id="botConfigForm">
+                <div class="form-group">
+                  <label>Servidor</label>
+                  <select id="settingsGuildSelect" required>
+                    <option value="">Selecione um servidor...</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Nome do Bot</label>
+                  <input type="text" id="settingsBotName" placeholder="Ex: MyShop Bot">
+                </div>
+                <div class="form-group">
+                  <label>URL da Logo</label>
+                  <input type="url" id="settingsBotLogo" placeholder="https://...">
+                  <small>Recomendado: 512x512px</small>
+                </div>
+                <div class="form-group">
+                  <label>URL da Capa</label>
+                  <input type="url" id="settingsBotBanner" placeholder="https://...">
+                  <small>Recomendado: 1200x300px</small>
+                </div>
+                <div class="form-group">
+                  <label>Cor do Tema (Hex)</label>
+                  <input type="color" id="settingsBotColor" value="#3b82f6">
+                </div>
+                <button type="submit" class="btn-primary">Salvar Configurações</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <h3>🔗 Integrações</h3>
+              <div class="integration-item">
+                <h4>Mercado Pago</h4>
+                <input type="text" id="mpToken" placeholder="Access Token" class="form-control">
+                <button class="btn-secondary" style="margin-top: 0.5rem;">Conectar</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Logs -->
+        <section class="page" id="logs-page">
+          <div class="card">
+            <div class="card-header">
+              <h3>📜 Logs do Sistema</h3>
+              <div class="header-controls">
+                <select id="logsGuildSelect" class="guild-select">
+                  <option value="">Selecione um servidor</option>
+                </select>
+                <button id="clearLogsBtn" class="btn-secondary">Limpar Logs</button>
+              </div>
+            </div>
+            <div id="logsList" class="logs-container">
+              <p class="empty-state">Nenhum log registrado</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Produto -->
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="productModalTitle">Criar Novo Produto</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form id="productForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nome</label>
+            <input type="text" id="productName" required>
+          </div>
+          <div class="form-group">
+            <label>Preço (R$)</label>
+            <input type="number" id="productPrice" step="0.01" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea id="productDescription" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Estoque</label>
+            <input type="number" id="productStock" value="9999">
+          </div>
+          <div class="form-group">
+            <label>Servidor (Anúncio)</label>
+            <select id="productGuild">
+              <option value="">Nenhum</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Canal (Anúncio)</label>
+          <select id="productChannel" disabled>
+            <option value="">Selecione um servidor primeiro</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>URL da Imagem</label>
+          <input type="url" id="productImage" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+          <label>Cor do Produto (Hex)</label>
+          <input type="color" id="productColor" value="#3b82f6">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Criar Produto</button>
+          <button type="button" class="btn-secondary" onclick="closeProductModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

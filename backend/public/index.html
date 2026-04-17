@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexosPay painel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">NexosPay</p>
+        <h1>Painel de vendas automatizado para Discord</h1>
+      </div>
+      <div id="userInfo" class="user-info" style="display: none;">
+        <img id="userAvatar" class="avatar" alt="Avatar">
+        <div class="user-details">
+          <span id="userName"></span>
+          <span id="userDiscriminator"></span>
+        </div>
+        <button id="logoutBtn" class="logout-btn">Sair</button>
+      </div>
+      <div class="header-actions">
+        <button id="loginBtn">Entrar com Discord</button>
+        <a id="inviteBotBtn" class="invite-btn" href="https://discord.com/oauth2/authorize?client_id=1493935131256295576&permissions=8&scope=bot%20applications.commands" target="_blank" rel="noopener noreferrer">Convidar Bot</a>
+      </div>
+    </header>
+
+    <nav id="navMenu" class="nav-menu" style="display: none;">
+      <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+      <button class="nav-btn" data-section="servers">Servidores</button>
+      <button class="nav-btn" data-section="products">Produtos</button>
+      <button class="nav-btn" data-section="orders">Pedidos</button>
+      <button class="nav-btn" data-section="settings">Configurações</button>
+      <button class="nav-btn" data-section="logs">Logs</button>
+    </nav>
+
+    <section class="hero-card">
+      <div>
+        <span class="badge">Sistema SaaS</span>
+        <h2>Dashboard rápido, vendas automáticas e entrega de produtos via Discord.</h2>
+        <p>Criar, vender e entregar produtos digitais com Mercado Pago, painel web e bot integrado, tudo em uma única plataforma.</p>
+      </div>
+      <div class="hero-metrics">
+        <div>
+          <strong>100%</strong>
+          <span>Conexão com Discord</span>
+        </div>
+        <div>
+          <strong>MySQL</strong>
+          <span>Banco de dados pronto</span>
+        </div>
+        <div>
+          <strong>PIX</strong>
+          <span>Pagamento automático</span>
+        </div>
+      </div>
+    </section>
+
+    <img src="assets/flutua.png" class="floating-image" alt="Imagem flutuante">
+
+    <main class="dashboard-grid">
+      <section class="card panel active" id="dashboard">
+        <h2>Loja ativa</h2>
+        <div class="section-description">Produtos cadastrados no sistema, prontos para venda e entrega automática.</div>
+        <div id="productList" class="list-body">Carregando produtos...</div>
+      </section>
+      <section class="card panel" id="servers">
+        <h2>Servidores</h2>
+        <div class="section-description">Veja todos os servidores onde você está, convide o bot e gerencie os que já têm o bot instalado.</div>
+        <div id="serverList" class="list-body">Carregando servidores...</div>
+      </section>
+      <section class="card panel" id="orders">
+        <h2>Meus pedidos</h2>
+        <div class="section-description">Acompanhe seus pedidos em tempo real.</div>
+        <div id="orderList" class="list-body">Carregando pedidos...</div>
+      </section>
+
+      <section class="card panel" id="products">
+        <h2>Gerenciar Produtos</h2>
+        <div class="section-description">Crie, edite e gerencie seus produtos.</div>
+        <button id="createProductBtn" class="action-btn">+ Criar Produto</button>
+        <div id="adminProductList" class="list-body">Carregando produtos...</div>
+      </section>
+
+      <section class="card panel" id="settings">
+        <h2>Configurações</h2>
+        <div class="section-description">Configure integrações e preferências do sistema.</div>
+        <div class="settings-grid">
+          <div class="setting-card">
+            <h3>🔗 Mercado Pago</h3>
+            <p>Conecte sua conta Mercado Pago para receber pagamentos via PIX.</p>
+            <input type="text" id="mpAccessToken" placeholder="Access Token do Mercado Pago" class="setting-input">
+            <button id="connectMPBtn" class="action-btn">Conectar</button>
+          </div>
+          <div class="setting-card">
+            <h3>🤖 Bot Discord</h3>
+            <p>Veja se o bot está conectado aos seus servidores e convide-o quando necessário.</p>
+            <p>Use a aba <strong>Servidores</strong> para gerenciar e convidar o bot.</p>
+          </div>
+          <div class="setting-card">
+            <h3>🎨 Personalização do Bot</h3>
+            <p>Personalize o nome, logo e capa do seu bot para cada servidor.</p>
+            <select id="guildSelect" class="setting-input">
+              <option value="">Selecione um servidor...</option>
+            </select>
+            <input type="text" id="botName" placeholder="Nome do Bot" class="setting-input">
+            <input type="url" id="botLogo" placeholder="URL da Logo" class="setting-input">
+            <input type="url" id="botCover" placeholder="URL da Capa" class="setting-input">
+            <button id="saveBotConfigBtn" class="action-btn">Salvar Configurações</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card panel" id="logs">
+        <h2>Logs do Sistema</h2>
+        <div class="section-description">Acompanhe todas as atividades e transações.</div>
+        <div id="logsList" class="list-body">Carregando logs...</div>
+      </section>
+
+      <section class="card overview-card">
+        <h3>Status do sistema</h3>
+        <div class="overview-grid">
+          <div>
+            <span>Backend</span>
+            <strong id="backendStatus">ONLINE</strong>
+          </div>
+          <div>
+            <span>Banco</span>
+            <strong id="dbStatus">MySQL ativo</strong>
+          </div>
+          <div>
+            <span>Pagamentos</span>
+            <strong id="paymentStatus">PIX & Mercado Pago</strong>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal para criar/editar produto -->
+    <div id="productModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Criar Produto</h3>
+          <button id="closeModalBtn" class="close-btn">&times;</button>
+        </div>
+        <form id="productForm">
+          <div class="form-group">
+            <label for="productName">Nome do Produto</label>
+            <input type="text" id="productName" required>
+          </div>
+          <div class="form-group">
+            <label for="productDescription">Descrição</label>
+            <textarea id="productDescription" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="productPrice">Preço (R$)</label>
+            <input type="number" id="productPrice" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="productStock">Estoque</label>
+            <input type="number" id="productStock" value="9999">
+          </div>
+          <div class="form-group">
+            <label for="productImage">URL da Imagem</label>
+            <input type="url" id="productImage">
+          </div>
+          <div class="form-group">
+            <label for="productGuild">Servidor</label>
+            <select id="productGuild">
+              <option value="">Selecionar servidor...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="productChannel">Canal para anúncio</label>
+            <select id="productChannel" disabled>
+              <option value="">Selecione um servidor primeiro</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="cancelBtn" class="cancel-btn">Cancelar</button>
+            <button type="submit" class="submit-btn">Salvar Produto</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+  <script>
+    const apiBaseUrl = 'http://localhost:3000/api';
+    async function checkAuth() {
+      try {
+        const response = await fetch(`${apiBaseUrl}/auth/me`, {
+          credentials: 'include'
+        });
+        const data = await response.json();
+        if (data.authenticated) {
+          window.location.href = '/dashboard';
+        }
+      } catch (error) {
+        console.error('Erro ao verificar auth:', error);
+      }
+    }
+    checkAuth();
+  </script>
+</body>
+</html>
