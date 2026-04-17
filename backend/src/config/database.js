@@ -4,27 +4,39 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const DATABASE_URL = process.env.DATABASE_URL || process.env.MYSQL_URL;
-let DB_NAME = process.env.DATABASE_NAME || process.env.MYSQLDATABASE;
+// Try DATABASE_URL first, then MYSQL_URL (Railway), then MYSQL_PUBLIC_URL (Railway fallback)
+const DATABASE_URL = process.env.DATABASE_URL || process.env.MYSQL_URL || process.env.MYSQL_PUBLIC_URL;
+let DB_NAME = process.env.DATABASE_NAME || process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || 'railway';
 let DB_HOST = process.env.DATABASE_HOST || process.env.MYSQLHOST;
-let DB_PORT = process.env.DATABASE_PORT || process.env.MYSQLPORT;
+let DB_PORT = process.env.DATABASE_PORT || process.env.MYSQLPORT || 3306;
 let DB_USER = process.env.DATABASE_USER || process.env.MYSQLUSER;
 let DB_PASSWORD = process.env.DATABASE_PASSWORD || process.env.MYSQLPASSWORD;
 let DB_SSL = false;
 
+// Parse URL if provided
 if (DATABASE_URL) {
-  const url = new URL(DATABASE_URL);
-  DB_NAME = url.pathname ? url.pathname.slice(1) : DB_NAME;
-  DB_HOST = url.hostname;
-  DB_PORT = url.port ? Number(url.port) : 3306;
-  DB_USER = url.username || DB_USER;
-  DB_PASSWORD = url.password || DB_PASSWORD;
-  const sslQuery = url.searchParams.get('ssl') || url.searchParams.get('sslmode');
-  DB_SSL = sslQuery === 'true' || sslQuery === 'require';
+  try {
+    const url = new URL(DATABASE_URL);
+    DB_NAME = url.pathname ? url.pathname.slice(1) : DB_NAME;
+    DB_HOST = url.hostname;
+    DB_PORT = url.port ? Number(url.port) : 3306;
+    DB_USER = url.username || DB_USER;
+    DB_PASSWORD = url.password || DB_PASSWORD;
+    const sslQuery = url.searchParams.get('ssl') || url.searchParams.get('sslmode');
+    DB_SSL = sslQuery === 'true' || sslQuery === 'require';
+  } catch (err) {
+    console.warn('Failed to parse DATABASE_URL:', err.message);
+  }
 }
 
 if (!DB_HOST || !DB_USER || !DB_PASSWORD || !DB_NAME) {
-  throw new Error('Missing database configuration. Set DATABASE_URL or DATABASE_HOST/DATABASE_USER/DATABASE_PASSWORD/DATABASE_NAME or the Railway MYSQL_* equivalents.');
+  console.error('Database configuration:', {
+    DB_HOST: DB_HOST ? '***' : 'MISSING',
+    DB_USER: DB_USER ? '***' : 'MISSING',
+    DB_PASSWORD: DB_PASSWORD ? '***' : 'MISSING',
+    DB_NAME: DB_NAME ? '***' : 'MISSING'
+  });
+  throw new Error('Missing database configuration. Ensure MYSQL_URL/DATABASE_URL or MYSQL_HOST/MYSQL_USER/MYSQL_PASSWORD/MYSQL_DATABASE are set.');
 }
 
 const connectionOptions = {
